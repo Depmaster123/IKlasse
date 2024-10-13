@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ - IKlasse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="site-title">IKlasse - Админ</h1>
+        <h2>Управление учениками</h2>
+        <div id="student-list"></div>
+        
+        <!-- Модальные окна для управления оценками и домашними заданиями -->
+        <div id="grade-modal" class="modal">
+            <h3>Поставить оценку</h3>
+            <form id="grade-form">
+                <label for="student-email">Электронная почта ученика:</label>
+                <select id="student-email"></select>
+                <label for="grade-type">Тип оценки:</label>
+                <select id="grade-type">
+                    <option value="З/НЗ">З/НЗ</option>
+                    <option value="Оценка">Оценка</option>
+                    <option value="%">%</option>
+                </select>
+                <label for="grade-value">Значение:</label>
+                <input type="text" id="grade-value" placeholder="Введите оценку" required>
+                <label for="grade-description">Описание:</label>
+                <input type="text" id="grade-description" placeholder="Введите описание" required>
+                <button type="submit">Сохранить оценку</button>
+                <button type="button" id="close-grade-modal">Закрыть</button>
+            </form>
+        </div>
+
+        <div id="homework-modal" class="modal">
+            <h3>Поставить домашнее задание</h3>
+            <form id="homework-form">
+                <label for="homework-student-email">Электронная почта ученика:</label>
+                <select id="homework-student-email"></select>
+                <label for="homework-description">Описание домашнего задания:</label>
+                <input type="text" id="homework-description" placeholder="Введите задание" required>
+                <label for="homework-due-date">Срок выполнения:</label>
+                <input type="date" id="homework-due-date" required>
+                <button type="submit">Сохранить домашнее задание</button>
+                <button type="button" id="close-homework-modal">Закрыть</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const email = localStorage.getItem('currentUser'); // Получаем текущего пользователя
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const adminUser = users.find(user => user.email === email && user.isAdmin);
+
+            if (!adminUser) {
+                alert('Доступ запрещен!');
+                window.location.href = 'login.html'; // Перенаправление на страницу входа
+                return;
+            }
+
+            const studentList = document.getElementById('student-list');
+            users.forEach(user => {
+                if (!user.isAdmin) { // Не показываем администраторов
+                    studentList.innerHTML += `<div class="student-item">
+                        <span>${user.email}</span>
+                        <button onclick="viewGrades('${user.email}')">Посмотреть оценки</button>
+                        <button onclick="viewHomework('${user.email}')">Посмотреть домашние задания</button>
+                        <button onclick="openGradeModal('${user.email}')">Поставить оценку</button>
+                        <button onclick="openHomeworkModal('${user.email}')">Поставить домашнее задание</button>
+                    </div>`;
+                }
+            });
+        });
+
+        function openGradeModal(studentEmail) {
+            document.getElementById('student-email').innerHTML = `<option value="${studentEmail}">${studentEmail}</option>`;
+            document.getElementById('grade-modal').style.display = 'block';
+        }
+
+        document.getElementById('close-grade-modal').addEventListener('click', function() {
+            document.getElementById('grade-modal').style.display = 'none';
+        });
+
+        document.getElementById('grade-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const studentEmail = document.getElementById('student-email').value;
+            const gradeType = document.getElementById('grade-type').value;
+            const gradeValue = document.getElementById('grade-value').value;
+            const gradeDescription = document.getElementById('grade-description').value;
+
+            // Пример функции для установки оценки
+            setGrade(studentEmail, gradeType, gradeValue, gradeDescription);
+            alert('Оценка успешно добавлена!');
+            document.getElementById('grade-modal').style.display = 'none';
+        });
+
+        function openHomeworkModal(studentEmail) {
+            document.getElementById('homework-student-email').innerHTML = `<option value="${studentEmail}">${studentEmail}</option>`;
+            document.getElementById('homework-modal').style.display = 'block';
+        }
+
+        document.getElementById('close-homework-modal').addEventListener('click', function() {
+            document.getElementById('homework-modal').style.display = 'none';
+        });
+
+        document.getElementById('homework-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const studentEmail = document.getElementById('homework-student-email').value;
+            const homeworkDescription = document.getElementById('homework-description').value;
+            const homeworkDueDate = document.getElementById('homework-due-date').value;
+
+            // Пример функции для установки домашнего задания
+            setHomework(studentEmail, homeworkDescription, homeworkDueDate);
+            alert('Домашнее задание успешно добавлено!');
+            document.getElementById('homework-modal').style.display = 'none';
+        });
+
+        // Пример функции для установки оценки
+        function setGrade(studentEmail, gradeType, gradeValue, gradeDescription) {
+            // Получаем всех пользователей из localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Находим пользователя по email
+            const user = users.find(user => user.email === studentEmail);
+
+            if (user) {
+                // Создаем новую оценку
+                const newGrade = {
+                    type: gradeType,
+                    value: gradeValue,
+                    description: gradeDescription,
+                    date: new Date().toLocaleDateString() // Текущая дата
+                };
+
+                // Добавляем новую оценку в массив оценок
+                user.grades.push(newGrade);
+
+                // Обновляем localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        // Пример функции для установки домашнего задания
+        function setHomework(studentEmail, homeworkDescription, dueDate) {
+            // Получаем всех пользователей из localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Находим пользователя по email
+            const user = users.find(user => user.email === studentEmail);
+
+            if (user) {
+                // Создаем новое домашнее задание
+                const newHomework = {
+                    description: homeworkDescription,
+                    dueDate: dueDate,
+                    date: new Date().toLocaleDateString() // Текущая дата
+                };
+
+                // Добавляем новое домашнее задание в массив домашних заданий
+                user.homework.push(newHomework);
+
+                // Обновляем localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        // Функции для просмотра оценок и домашки (не забудьте реализовать их)
+        function viewGrades(studentEmail) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === studentEmail);
+            if (user) {
+                alert(`Оценки для ${studentEmail}:\n` + user.grades.map(g => `${g.date}: ${g.type} - ${g.value} (${g.description})`).join('\n'));
+            }
+        }
+
+        function viewHomework(studentEmail) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === studentEmail);
+            if (user) {
+                alert(`Домашние задания для ${studentEmail}:\n` + user.homework.map(hw => `${hw.date}: ${hw.description} (Срок: ${hw.dueDate})`).join('\n'));
+            }
+        }
+    </script>
+</body>
+</html>

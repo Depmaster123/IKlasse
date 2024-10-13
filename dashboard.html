@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница ученика - IKlasse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="site-title">IKlasse - Ученика</h1>
+        <h2>Ваши оценки и домашние задания</h2>
+        <div id="grades"></div>
+        <div id="homework"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const email = localStorage.getItem('currentUser'); // Получаем текущего пользователя
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === email);
+
+            if (user) {
+                const gradesContainer = document.getElementById('grades');
+                const homeworkContainer = document.getElementById('homework');
+
+                // Отображение оценок
+                gradesContainer.innerHTML = '<h3>Оценки</h3>';
+                user.grades.forEach(grade => {
+                    gradesContainer.innerHTML += `<div class="grade-item">${grade.date}: ${grade.type} - ${grade.value} (${grade.description})</div>`;
+                });
+
+                // Отображение домашнего задания
+                homeworkContainer.innerHTML = '<h3>Домашние задания</h3>';
+                user.homework.forEach(hw => {
+                    homeworkContainer.innerHTML += `<div class="homework-item">${hw.date}: ${hw.description} (До: ${hw.dueDate})</div>`;
+                });
+            } else {
+                alert('Пользователь не найден!');
+                window.location.href = 'login.html'; // Перенаправление на страницу входа
+            }
+        });
+    </script>
+</body>
+</html>

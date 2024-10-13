@@ -1,0 +1,167 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ff0080, #ff8c00, #ffee00, #40e0d0, #0080ff, #800080, #ff0080); /* Градиент радуги */
+    background-size: 600% 600%; /* Увеличенный размер для анимации */
+    animation: gradient 5s ease infinite; /* Увеличена скорость анимации */
+    color: #333; /* Цвет текста */
+    line-height: 1.6; /* Увеличенный интервал между строками */
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон контейнера */
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); /* Легкая тень */
+}
+
+.site-title {
+    text-align: center;
+    font-size: 3em;
+    background: linear-gradient(to right, #ff5722, #ffc107); /* Градиентный текст */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Текст с градиентом */
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 2em;
+    color: #007bff; /* Ярко-синий цвет */
+}
+
+.student-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Светлая граница */
+    border-radius: 10px;
+    margin: 10px 0;
+    background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон */
+    transition: background-color 0.3s, transform 0.3s; /* Плавный переход */
+}
+
+.student-item:hover {
+    background-color: rgba(255, 87, 34, 0.1); /* Светло-оранжевый фон при наведении */
+    transform: scale(1.02); /* Легкое увеличение при наведении */
+}
+
+.student-item span {
+    font-weight: bold;
+    font-size: 1.2em; /* Увеличен размер шрифта */
+    color: #ff5722; /* Ярко-оранжевый */
+}
+
+.student-item button {
+    background-color: #2196f3; /* Ярко-синий */
+    color: white;
+    border: none;
+    padding: 12px 20px; /* Увеличены размеры */
+    border-radius: 10px; /* Закругленные углы */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход */
+    font-size: 1.1em; /* Увеличен размер шрифта */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень для кнопок */
+}
+
+.student-item button:hover {
+    background-color: #1976d2; /* Темно-синий при наведении */
+    transform: translateY(-3px); /* Поднятие при наведении */
+}
+
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Темный полупрозрачный фон */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal h3 {
+    text-align: center;
+    color: #ff5722; /* Яркий оранжевый */
+    margin-bottom: 20px;
+}
+
+.modal form {
+    background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон для форм */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+    font-size: 1.1em; /* Увеличен размер шрифта */
+    color: #ff5722; /* Ярко-оранжевый цвет */
+}
+
+.modal input, .modal select {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 2px solid #007bff; /* Ярко-синяя граница */
+    border-radius: 10px;
+    transition: border 0.3s, box-shadow 0.3s; /* Плавный переход для границы */
+    font-size: 1em; /* Размер шрифта */
+}
+
+.modal input:focus, .modal select:focus {
+    border-color: #ff5722; /* Ярко-оранжевая граница при фокусе */
+    box-shadow: 0 0 5px rgba(255, 87, 34, 0.5); /* Светлая тень при фокусе */
+}
+
+.modal button {
+    background-color: #28a745; /* Зеленый для кнопок */
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px; /* Закругленные углы */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Плавный переход */
+    width: 100%; /* Кнопки на всю ширину */
+    font-size: 1.1em; /* Увеличен размер шрифта */
+}
+
+.modal button:hover {
+    background-color: #218838; /* Темно-зеленый при наведении */
+    transform: translateY(-3px); /* Поднятие при наведении */
+}
+
+#close-grade-modal, #close-homework-modal {
+    background-color: #dc3545; /* Красный для закрывающих кнопок */
+}
+
+#close-grade-modal:hover, #close-homework-modal:hover {
+    background-color: #c82333; /* Темно-красный при наведении */
+}

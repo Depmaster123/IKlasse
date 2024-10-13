@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - IKlasse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="site-title">IKlasse</h1>
+        <h2>Вход</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Электронная почта:</label>
+                <input type="email" id="email" placeholder="Введите вашу почту" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" placeholder="Введите пароль" required>
+            </div>
+            <button type="submit" class="button">Войти</button>
+        </form>
+        <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+    </div>
+
+    <script>
+        // Обработчик отправки формы
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Проверка на наличие пользователя
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                localStorage.setItem('currentUser', email); // Сохраняем текущего пользователя
+                if (user.isAdmin) { // Проверяем, является ли пользователь администратором
+                    window.location.href = 'admin-dashboard.html'; // Перенаправление на страницу администратора
+                } else {
+                    window.location.href = 'dashboard.html'; // Перенаправление на страницу с оценками
+                }
+            } else {
+                alert('Неправильный логин или пароль!');
+            }
+        });
+    </script>
+</body>
+</html>
